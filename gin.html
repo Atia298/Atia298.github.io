@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.menu {/**/
+padding-top: auto;
+padding-left: 10px;
+  float: left;
+  width: 20%;
+}
+
+.menuitem {/**/
+  padding: 8px;
+  margin-top: 7px;
+  border-bottom: 1px solid #ff7e5f;
+}
+
+.main {/*메인 내용들*/
+  float: left;
+  width: 60%; 
+  padding: 100px;
+  overflow: hidden;
+}
+
+.right {/**/
+  background-color: #ff7e5f ;
+  color: white;
+  float: left;
+  width: 20%;
+  margin-top: 7px;
+}
+
+.button { /*주석 다 적어*/
+  border: none; /* 버튼의 테두리 없애기 */
+  color: white; /*버튼색*/
+  padding: 16px 32px; /* 버튼의 내부 여백 설정 */
+  text-align: center; /*글씨 가운데 정렬*/
+  text-decoration: none; 
+  display: flex; /* 플렉스 박스 설정 */
+  justify-content: center; /* 가로 방향으로 가운데 정렬 */
+  font-size: 1vw;
+   /* 버튼의 글꼴 크기 설정 */
+  margin: 4px 2px; 
+  cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 만들기 */
+  width: 9vw; /* 모든 버튼의 너비를 9vw로 설정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+}
+
+.button1 {/**/
+    display:flex;
+    align-items:center;
+    
+  background-color: white;
+  color: black;
+  border: 2px solid #ff7e5f;
+  
+}
+
+.button1:hover {/**/
+    display:flex;
+    align-items:center;
+  background-color: #ff7e5f;
+  color: white;
+}
+
+header{/**/
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    color: red;
+}
+
+header1{/*제목*/
+  padding: 1rem;
+  color: white;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+     li {
+      display: inline-block; 
+    }  
+      a {/*리스트 목록*/
+     text-decoration: none;
+     color: white;
+    }
+  }
+  form{
+    position: absolute;
+            top: 80px;
+            right: 10px;
+            input {
+            width: 300px; 
+            height: 40px; 
+            font-size: 16px; 
+            padding: 10px; 
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100px; 
+            height: 40px; 
+            font-size: 16px;
+            padding: 10px; 
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: grey;
+            color: white;
+            cursor: pointer;
+        }
+            
+  }
+
+header2{/*검색창*/
+  padding: 1rem;
+  color: white;
+  background-color: #ff7e5f;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+     li {
+      display: inline-block; 
+    }  
+      a {/*리스트 목록*/
+     text-decoration: none;
+     color: white;
+    }
+}
+
+
+
+</style>
+</head>
+
+<script>
+  function getSimilarity(s1, s2) {
+      const len1 = s1.length;
+      const len2 = s2.length;
+      const dp = Array.from(Array(len1 + 1), () => Array(len2 + 1).fill(0));
+
+      for (let i = 0; i <= len1; i++) dp[i][0] = i;
+      for (let j = 0; j <= len2; j++) dp[0][j] = j;
+
+      for (let i = 1; i <= len1; i++) {
+          for (let j = 1; j <= len2; j++) {
+              if (s1[i - 1] === s2[j - 1]) {
+                  dp[i][j] = dp[i - 1][j - 1];
+              } else {
+                  dp[i][j] = Math.min(
+                      dp[i - 1][j] + 1, 
+                      dp[i][j - 1] + 1, 
+                      dp[i - 1][j - 1] + 1 
+                  );
+              }
+          }
+      }
+      return dp[len1][len2];
+  }
+
+  function searchCocktail(event) {
+      event.preventDefault(); 
+      const query = document.getElementById('search').value.toLowerCase(); 
+
+
+      const cocktails = {
+        "프렌치75": "ginfrench75.html",
+        "네그로니": "ginnegroni.html",
+        "핑크진": "ginpinkjin.html",
+        "싱가폴슬링": "ginsingaporesling.html",
+        "화이트레이디": "ginwhitelady.html",
+        "블루하와이": "mixbluehawaii.html",
+        "그레이브야드": "mixgraveyard.html",
+        "바카디": "rumbacardi.html",
+        "쿠바리브레": "rumcubalibre.html",
+        "다이키리": "rumdaiquiri.html",
+        "마이타이": "rummaitai.html",
+        "모히또": "rummojito.html",
+        "올드쿠반": "rumoldcuban.html",
+        "마가리타": "tequilamargarita.html",
+        "네이키드앤페이머스": "tequilanakedandfamous.html",
+        "데킬라선라이즈": "tequilatequilasunrise.html",
+        "팔로마": "tequilapaloma.html",
+        "데킬라슬래머": "tequilatequilaslammer.html",
+        "마티니": "gindrymartini.html",
+        "김렛": "gingimlet.html",
+        "블랙러시안": "vodkablackrussian.html",
+        "코스모폴리탄": "vodkacosmopolitan.html",
+        "에스프레소마티니": "vodkaespressomartini.html",
+        "하비월뱅어": "vodkaharveywallbanger.html",
+        "머드슬라이드": "vodkamudslide.html",
+        "모스코뮬": "vodkamoscowmule.html",
+        "스크류드라이버": "vodkascrewdriver.html",
+        "불바디에": "whiskeyboulevardier.html",
+        "갓파더": "whiskeygodfather.html",
+        "아이리쉬커피": "whiskeyirishcoffee.html",
+        "맨해튼": "whiskeymanhattan.html",
+        "올드패션드": "whiskeyoldfashioned.html",
+        "러스티네일": "whiskeyrustynail.html",
+        "위스키사워": "whiskeywhiskeysour.html",
+
+      };
+
+
+      let bestMatch = null;
+      let minDistance = Infinity;
+
+      for (const cocktail in cocktails) {
+          const distance = getSimilarity(query, cocktail);
+          if (distance < minDistance) {
+              minDistance = distance;
+              bestMatch = cocktail;
+          }
+      }
+
+
+      const threshold = 1.5;
+
+      if (minDistance <= threshold && bestMatch) {
+          window.location.href = cocktails[bestMatch]; 
+      } else {
+          alert('칵테일을 찾을 수 없습니다.'); 
+      }
+  }
+</script>
+</head>
+
+
+<div class="header1">
+  <header1>
+    <style>
+      
+        h1{
+          font-size: 50px;
+
+        }
+        h2{
+          font-size: 26px;
+        }
+    </style>
+      <h1><a href="index.html">칵테일 만드는 법</a></h1>
+        <h2>
+          <span>스피리츠 리스트 /</span>
+          <li><a href="vodka.html">보드카</a></li>
+          <li><a href="rum.html">럼</a></li>
+          <li><a href="gin.html">진</a></li>
+          <li><a href="whiskey.html">위스키</a></li>
+          <li><a href="tequila.html">테킬라</a></li> /
+          <li><a href="side.html">부재료들</a></li>
+        </h2>
+        <form onsubmit="searchCocktail(event)">
+          <label for="search"></label>
+          <input type="text" id="search" name="q" required>
+          <button type="submit">검색</button>
+        </form>
+  </header1>
+</div>
+
+
+
+<body>
+    <style>
+        /* 카드 스타일 */
+        .card {
+            display: block; /* 가로로 정렬되도록 설정 */
+            flex-wrap: wrap; /* 넘치는 요소를 다음 줄로 넘기도록 설정 */
+            justify-content: space-around; /* 요소들을 가로로 고르게 분포시킴 */
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: relative;
+            margin: 4px 2px; 
+            }
+           .card1 {/**/
+
+            align-items:center;
+            background-color: white;
+            color: black;
+            border: 2px solid #ff7e5f;
+            transition-duration: 0.4s;
+            }
+            .card1:hover {/**/
+
+            align-items:center;
+            background-color: #ff7e5f;
+            color: white;
+            }              
+           /* 각 이미지 및 버튼의 스타일 */
+           .card__item {
+            flex: auto; /* 5개의 요소가 가로로 정렬되도록 설정 */
+            margin: 10px; /* 각 요소 사이의 여백 설정 */
+            background-color: white;
+            }
+       
+           /* 이미지 스타일 */
+           .card__image {
+            width: 220px; /* 이미지가 부모 요소에 꽉 차게 설정 */
+            height: 170px; /* 이미지의 높이 자동 조정 */
+            padding-top: 3px;
+           }
+
+           /* 하이퍼링크 스타일*/
+           a {
+            text-decoration: none; /* 밑줄 제거 */
+            color:black;
+            font-weight: bold;
+            transition-duration: 0.4s
+            }
+           a:hover {
+           color: white; /* 마우스를 올렸을 때의 글자색 */
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+            h4 {
+                font-size: 14px;
+            }
+            p4 {
+                font-size: 10px;
+                float: left;
+                text-align: left;
+            }
+           </style>
+<div class="card">
+    <!-- 이미지와 버튼 포함한 카드 아이템 -->
+    <button class="card__item card1">
+
+        <a href="gingimlet.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/05j0hV6YaJB9D2Vo_7xbFHgF-Q8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Gimlet-1500x1500-hero-7af9450103b9437d8d5b7206a6ddfe43.jpg"
+        alt="">
+        <br>
+        <h4>진베이스 칵테일</h4>
+        <h2>김렛</h2> 
+        <h2>Gimlet</h2> 
+
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+        <a href="gindrymartini.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/d_JCbL8J-63JcWlhNjXPd4_HjM4=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/dry-martini-1500x1500-hero-b0e9fa9cb79440879d487bec87d72a2d.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>드라이 마티니</h2> 
+        <h2>Dry Martini</h2>
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+        <a href="ginnegroni.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/RaXwpOgNmF1_HklNLttj67_GMtA=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/negroni-720x720-primary-535dee7b50914af1810b1927b69dbe46.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>네그로니</h2>
+        <h2>Negroni</h2>
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+        <a href="ginwhitelady.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/GEIKogf_YAqMd72dFrmE8LZto0Q=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/white-lady-720x720-primary-49f8bd47524f4d52be295835a95c51cd.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>화이트 레이디</h2> 
+        <h2>White Lady</h2>
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+      <a href="mixgraveyard.html">
+      <img class="card__image" src="https://cdn.tipsybartender.com/tipsybartender/jpg/youtube/F4TV6I9m6Bs.jpg?width=460"
+      alt=""><br>
+      <h4>3종류 이상 베이스 칵테일</h4>
+      <h2>그레이브야드</h2> 
+      <h2>Graveyard</h2>
+      </a>
+  </button>
+
+  <button class="card__item card1">
+
+      <a href="mixlongislandicedtea.html">
+      <img class="card__image" src="https://www.liquor.com/thmb/xPAsh2K8KIa9U4pW4XiMOMYGV3s=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__liquor__2019__03__14090749__Long-Island-Iced-Tea-720x720-article-272623f47e80457594178a552f708068.jpg"
+      alt=""><br>
+      <h4>3종류 이상 베이스 칵테일</h4>
+      <h2>롱 아일랜드 아이스티</h2>
+      <h2>Long Island Iced Tea</h2> 
+      </a>
+  </button>
+
+    <button class="card__item card1">
+
+        <a href="ginfrench75.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/uuQZOeX-uGq4ayJhFR5D7tFxYvg=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/french-75-4000x4000-primary-ig-861ae757fec64997a6136dbbf37da6f0.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>프렌치 75</h2>
+        <h2>French 75</h2> 
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+        <a href="ginsingaporesling.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/g82LDbrf49zzbv9gHNnbouuaggE=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Singapore_Sling_3000x3000_primary-5fd9e3d361204753919604d123ca23f2.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>싱가폴 슬링</h2> 
+        <h2>Singapore Sling </h2>
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+        <a href="ginpinkgin.html">
+        <img class="card__image" src="https://www.liquor.com/thmb/4L9sn3_c3fYNKF4aVQcR0ypZuwQ=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/pink-gin-720x720-primary-9c98c5ce0c1f4ab1a5a372b800770c2d.jpg"
+        alt="">
+        <h4>진베이스 칵테일</h4>
+        <h2>핑크 진</h2>
+        <h2>Pink Gin</h2> 
+        </a>
+    </button>
+</div>
+</body>
+</html>

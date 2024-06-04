@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+* {
+  box-sizing: border-box;
+}
+
+.menu {/**/
+padding-top: auto;
+padding-left: 10px;
+  float: left;
+  width: 20%;
+}
+
+.menuitem {/**/
+  padding: 8px;
+  margin-top: 7px;
+  border-bottom: 1px solid #ff7e5f;
+}
+
+.main {/*메인 내용들*/
+  float: left;
+  width: 60%; 
+  padding: 100px;
+  overflow: hidden;
+}
+
+.right {/**/
+  background-color: #ff7e5f ;
+  color: white;
+  float: left;
+  width: 20%;
+  margin-top: 7px;
+}
+
+.button { /*주석 다 적어*/
+  border: none; /* 버튼의 테두리 없애기 */
+  color: white; /*버튼색*/
+  padding: 16px 32px; /* 버튼의 내부 여백 설정 */
+  text-align: center; /*글씨 가운데 정렬*/
+  text-decoration: none; 
+  display: flex; /* 플렉스 박스 설정 */
+  justify-content: center; /* 가로 방향으로 가운데 정렬 */
+  font-size: 1vw;
+   /* 버튼의 글꼴 크기 설정 */
+  margin: 4px 2px; 
+  cursor: pointer; /* 마우스 커서를 포인터로 변경하여 클릭 가능한 상태로 만들기 */
+  width: 9vw; /* 모든 버튼의 너비를 9vw로 설정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+}
+
+.button1 {/**/
+    display:flex;
+    align-items:center;
+    
+  background-color: white;
+  color: black;
+  border: 2px solid #ff7e5f;
+  
+}
+
+.button1:hover {/**/
+    display:flex;
+    align-items:center;
+  background-color: #ff7e5f;
+  color: white;
+}
+
+header{/**/
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 100;
+    color: red;
+}
+
+header1{/*제목*/
+  padding: 1rem;
+  color: white;
+  background: linear-gradient(to right, #ff7e5f, #feb47b);
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+     li {
+      display: inline-block; 
+    }  
+      a {/*리스트 목록*/
+     text-decoration: none;
+     color: white;
+    }
+  }
+  form{
+    position: absolute;
+            top: 80px;
+            right: 10px;
+            input {
+            width: 300px; 
+            height: 40px; 
+            font-size: 16px; 
+            padding: 10px; 
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        button {
+            width: 100px; 
+            height: 40px; 
+            font-size: 16px;
+            padding: 10px; 
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: grey;
+            color: white;
+            cursor: pointer;
+        }
+            
+  }
+
+header2{/*검색창*/
+  padding: 1rem;
+  color: white;
+  background-color: #ff7e5f;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-start;
+     li {
+      display: inline-block; 
+    }  
+      a {/*리스트 목록*/
+     text-decoration: none;
+     color: white;
+    }
+}
+
+
+
+</style>
+</head>
+
+<script>
+  function getSimilarity(s1, s2) {
+      const len1 = s1.length;
+      const len2 = s2.length;
+      const dp = Array.from(Array(len1 + 1), () => Array(len2 + 1).fill(0));
+
+      for (let i = 0; i <= len1; i++) dp[i][0] = i;
+      for (let j = 0; j <= len2; j++) dp[0][j] = j;
+
+      for (let i = 1; i <= len1; i++) {
+          for (let j = 1; j <= len2; j++) {
+              if (s1[i - 1] === s2[j - 1]) {
+                  dp[i][j] = dp[i - 1][j - 1];
+              } else {
+                  dp[i][j] = Math.min(
+                      dp[i - 1][j] + 1, 
+                      dp[i][j - 1] + 1, 
+                      dp[i - 1][j - 1] + 1 
+                  );
+              }
+          }
+      }
+      return dp[len1][len2];
+  }
+
+  function searchCocktail(event) {
+      event.preventDefault(); 
+      const query = document.getElementById('search').value.toLowerCase(); 
+
+
+      const cocktails = {
+        "프렌치75": "ginfrench75.html",
+        "네그로니": "ginnegroni.html",
+        "핑크진": "ginpinkjin.html",
+        "싱가폴슬링": "ginsingaporesling.html",
+        "화이트레이디": "ginwhitelady.html",
+        "블루하와이": "mixbluehawaii.html",
+        "그레이브야드": "mixgraveyard.html",
+        "바카디": "rumbacardi.html",
+        "쿠바리브레": "rumcubalibre.html",
+        "다이키리": "rumdaiquiri.html",
+        "마이타이": "rummaitai.html",
+        "모히또": "rummojito.html",
+        "올드쿠반": "rumoldcuban.html",
+        "마가리타": "tequilamargarita.html",
+        "네이키드앤페이머스": "tequilanakedandfamous.html",
+        "데킬라선라이즈": "tequilatequilasunrise.html",
+        "팔로마": "tequilapaloma.html",
+        "데킬라슬래머": "tequilatequilaslammer.html",
+        "마티니": "gindrymartini.html",
+        "김렛": "gingimlet.html",
+        "블랙러시안": "vodkablackrussian.html",
+        "코스모폴리탄": "vodkacosmopolitan.html",
+        "에스프레소마티니": "vodkaespressomartini.html",
+        "하비월뱅어": "vodkaharveywallbanger.html",
+        "머드슬라이드": "vodkamudslide.html",
+        "모스코뮬": "vodkamoscowmule.html",
+        "스크류드라이버": "vodkascrewdriver.html",
+        "불바디에": "whiskeyboulevardier.html",
+        "갓파더": "whiskeygodfather.html",
+        "아이리쉬커피": "whiskeyirishcoffee.html",
+        "맨해튼": "whiskeymanhattan.html",
+        "올드패션드": "whiskeyoldfashioned.html",
+        "러스티네일": "whiskeyrustynail.html",
+        "위스키사워": "whiskeywhiskeysour.html",
+
+      };
+
+
+      let bestMatch = null;
+      let minDistance = Infinity;
+
+      for (const cocktail in cocktails) {
+          const distance = getSimilarity(query, cocktail);
+          if (distance < minDistance) {
+              minDistance = distance;
+              bestMatch = cocktail;
+          }
+      }
+
+
+      const threshold = 1.5;
+
+      if (minDistance <= threshold && bestMatch) {
+          window.location.href = cocktails[bestMatch]; 
+      } else {
+          alert('칵테일을 찾을 수 없습니다.'); 
+      }
+  }
+</script>
+</head>
+
+
+<div class="header1">
+  <header1>
+    <style>
+      
+        h1{
+          font-size: 50px;
+
+        }
+        h2{
+          font-size: 26px;
+        }
+    </style>
+      <h1><a href="index.html">칵테일 만드는 법</a></h1>
+        <h2>
+          <span>스피리츠 리스트 /</span>
+          <li><a href="vodka.html">보드카</a></li>
+          <li><a href="rum.html">럼</a></li>
+          <li><a href="gin.html">진</a></li>
+          <li><a href="whiskey.html">위스키</a></li>
+          <li><a href="tequila.html">테킬라</a></li> /
+          <li><a href="side.html">부재료들</a></li>
+        </h2>
+        <form onsubmit="searchCocktail(event)">
+          <label for="search"></label>
+          <input type="text" id="search" name="q" required>
+          <button type="submit">검색</button>
+        </form>
+  </header1>
+</div>
+
+
+
+
+<body>
+    <style>
+        /* 카드 스타일 */
+        .card {
+            display: block; /* 가로로 정렬되도록 설정 */
+            flex-wrap: wrap; /* 넘치는 요소를 다음 줄로 넘기도록 설정 */
+            justify-content: space-around; /* 요소들을 가로로 고르게 분포시킴 */
+            border: none;
+            background: none;
+            cursor: pointer;
+            position: relative;
+            margin: 4px 2px; 
+            }
+           .card1 {/**/
+
+            align-items:center;
+            background-color: white;
+            color: black;
+            border: 2px solid #ff7e5f;
+            transition-duration: 0.4s;
+            }
+            .card1:hover {/**/
+
+            align-items:center;
+            background-color: #ff7e5f;
+            color: white;
+            }              
+           /* 각 이미지 및 버튼의 스타일 */
+           .card__item {
+            width: 90%;
+            height: 25%;
+            flex: auto; /* 5개의 요소가 가로로 정렬되도록 설정 */
+            margin: 10px; /* 각 요소 사이의 여백 설정 */
+            background-color: white;
+            }
+       
+           /* 이미지 스타일 */
+           .card__image {
+            width: 20%; /* 이미지가 부모 요소에 꽉 차게 설정 */
+            height: 20vw; /* 이미지의 높이 자동 조정 */
+            padding-top: 3px;
+            float: left;
+           }
+
+           /* 하이퍼링크 스타일*/
+           a {
+            text-decoration: none; /* 밑줄 제거 */
+            color:black;
+            font-weight: bold;
+            transition-duration: 0.4s
+            }
+           a:hover {
+           color: white; /* 마우스를 올렸을 때의 글자색 */
+            }
+            h2{
+                text-align: left;
+            }
+            h4 {
+                font-size: 20px;
+                text-align: left;
+            }
+            p4 {
+                font-size: 10px;
+                float: left;
+                text-align: left;
+            }
+           </style>
+<div class="card">
+    <!-- 이미지와 버튼 포함한 카드 아이템 -->
+    <h1>잔 종류에 대해</h1>
+    <button class="card__item card1">
+
+        <a href="https://www.google.com/search?newwindow=1&sca_esv=2d9b3b584447d4b2&q=%ED%97%88%EB%A6%AC%EC%BC%80%EC%9D%B8+%EA%B8%80%EB%9D%BC%EC%8A%A4&uds=ADvngMhPyO5YHS0LBNKxvUmN-jNjlsElLZCww8wuKJzzreGsTlgdxzNrEYXUor8keLXqxijtIPCWXcOi6eZVFBF_bUO1W8Wswpu6s3cGdzQKRg9XbwDZHdsCVDP4He6LyRx7INtTbrpemubUwiZvp8jSi5bK_lfLNkohqPx7HBE4D7KbJMUT0njxmPYOqHTZG4RKimrKJeLUlS-_wndCkw4_t8wBK0Mg69NMnItSPOgMPiBKAmN3HVwFAXdnATX5vj1lSDJxmDNFRTun1U9gWN3lqAOxTuiJOmb26tNZpToF37TQJH7OwzOOwVx0K4IgT9iTtlgRv4D_&udm=2&prmd=isvnmbz&sa=X&ved=2ahUKEwips-3wyK6GAxVFh68BHaIuFLoQtKgLegQICxAB&biw=1031&bih=1457&dpr=0.9">
+        <img class="card__image" src="https://www.liquor.com/thmb/5QJM5WBzZp7fH4Baaig6uIrXj9U=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/blue-hawaii-1500x1500-hero-1d77432ce500460f98caa29775805f1c.jpg"
+        alt="">
+        <h2>허리케인 글라스 / Hurricane Glass</h2> 
+        <h4>피나 콜라다같은 롱 드링크 칵테일에 많이 사용되는 잔으로, S자를 그리는 형태가 특징인 잔이다.</h4>
+        </a>
+    </button>
+
+    <button class="card__item card1">
+
+      <a href="https://www.google.com/search?newwindow=1&sca_esv=668e1abf6fdfcd6c&q=%EC%98%AC%EB%93%9C%ED%8C%A8%EC%85%98%EB%93%9C+%EC%9E%94&uds=ADvngMgNG4qWEcyOv6mZ7d9R1NXi8kRthLY4kEm8peiM5LZcAYuuB_P3J3rguyTmbtefVLMWYO7STWBhDuveGuImlxhCJgkkRil1x3A6U9aqVfhL9s71emLGX52ufuh-8FaFas95Ii6qpkavVMhKTp7No-h2s3UXqvQACbDP5To2Suhzu4TUwH2smaFoLvLs3-d_g2J2hLbYKPTocW8Iv4k_dEyQVyPFuu5553183oXcYVrIQ9AHJEibXoTyx8jaMm4lkFeiZRrC762SAfrofSQcflaODcK5cY2nDIYOXL42HHC4htZNR-o&udm=2&prmd=isvmnbz&sa=X&ved=2ahUKEwjo97v9nriGAxU_mq8BHZ57Dj4QtKgLegQIDRAB&biw=1392&bih=1185&dpr=1"></a>
+      <img class="card__image" src="https://www.liquor.com/thmb/IgE3k1GbbNMWVCpmFI3-kKSx3eM=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/bourbon-old-fashioned-4000x4000-primary-ig-f0ce04bec6754db187ab1e8a16fd45c3.jpg"
+      alt="">
+      <h2>올드 패션드 잔 / Old Fashioned Glass</h2> 
+      <h4>안에 커다란 얼음을 넣어서 마시는 온더락 형태로 주로 사용하는 잔이다. 흔히들 위스키를 마실 때 쓰는 넓고 낮은 잔이다. 
+          줄무늬나 다이아몬드 모양 등 패턴이 들어간 락 글라스도 흔히 찾아볼 수 있다.</h4>
+
+      </a>
+  </button><a href="oldfashioned.html"></a>
+
+  <button class="card__item card1">
+
+    <a href="https://www.google.com/search?q=%EB%A1%B1%EB%93%9C%EB%A7%81%ED%81%AC+%EC%9E%94&newwindow=1&sca_esv=668e1abf6fdfcd6c&ei=2uBUZriWHcibvr0Pu7rCkA4&udm=&ved=0ahUKEwi46_afyq6GAxXIja8BHTudEOIQ4dUDCBA&uact=5&oq=%EB%A1%B1%EB%93%9C%EB%A7%81%ED%81%AC+%EC%9E%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiEOuhseuTnOunge2BrCDsnpQyBBAAGB4yCBAAGIAEGKIEMggQABiABBiiBDIIEAAYgAQYogQyCBAAGIAEGKIESKwNUABYswxwAXgBkAEBmAGOAaAB3AyqAQQwLjE0uAEDyAEA-AEBmAIIoAKhBsICCxAAGIAEGLEDGIMBwgIIEC4YgAQYsQPCAgUQLhiABMICCxAuGIAEGLEDGIMBwgIEEAAYA8ICCBAAGIAEGLEDwgIREC4YgAQYsQMY0QMYgwEYxwHCAhEQLhiABBixAxiDARjHARivAcICBRAAGIAEwgIGEAAYHhgPwgIUEC4YgAQYlwUY3AQY3gQY3wTYAQGYAwC6BgYIARABGBSSBwMxLjegB_CMAQ&sclient=gws-wiz-serp">
+    <img class="card__image" src="https://www.liquor.com/thmb/xPAsh2K8KIa9U4pW4XiMOMYGV3s=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/__opt__aboutcom__coeus__resources__content_migration__liquor__2019__03__14090749__Long-Island-Iced-Tea-720x720-article-272623f47e80457594178a552f708068.jpg"
+    alt="">
+    <h2>롱 드링크 잔 / Highball Glass</h2> 
+    <h4>하이볼이나 피즈 등의 칵테일에 주로 쓰이는 잔으로 '하이볼 글래스'라고 한다. 용량은 6~10oz(180ml~300ml). 가장 흔하게 사용되는 건 8oz(240ml) 사이즈이다. 이보다 긴 사이즈는 콜린스 글라스라고 한다.</h4>
+
+    </a>
+</button>
+
+<button class="card__item card1">
+
+  <a href="https://www.google.com/search?q=%EB%A7%88%ED%8B%B0%EB%8B%88+%EC%9E%94&newwindow=1&sca_esv=668e1abf6fdfcd6c&ei=E-FUZtSULJW5vr0PtL2DsAI&udm=&ved=0ahUKEwiU6py7yq6GAxWVnK8BHbTeACYQ4dUDCBA&uact=5&oq=%EB%A7%88%ED%8B%B0%EB%8B%88+%EC%9E%94&gs_lp=Egxnd3Mtd2l6LXNlcnAiDeuniO2LsOuLiCDsnpQyChAAGIAEGEMYigUyChAAGIAEGEMYigUyBRAAGIAEMgUQABiABDIFEC4YgAQyBRAAGIAEMgUQABiABDIFEC4YgAQyBRAAGIAEMgUQABiABEieD1AAWKsOcAR4AZABAJgBhQGgAdsJqgEEMC4xMbgBA8gBAPgBAZgCDaACngioAhTCAhEQLhiABBixAxjRAxiDARjHAcICCxAAGIAEGLEDGIMBwgIgEC4YgAQYsQMY0QMYgwEYxwEYlwUY3AQY3gQY4ATYAQHCAggQABiABBixA8ICCxAuGIAEGLEDGIMBwgIIEC4YgAQYsQPCAgcQABiABBgKwgIUEAAYgAQY4wQYtAIY6QQY6gLYAQLCAhAQABgDGLQCGOoCGI8B2AEDwgIQEC4YAxi0AhjqAhiPAdgBA8ICBBAAGAPCAgQQLhgDwgIOEC4YgAQYsQMYgwEY1ALCAgsQLhiABBixAxjUAsICGhAuGIAEGLEDGIMBGJcFGNwEGN4EGN8E2AEBmAMFugYGCAEQARgUugYECAIYB7oGBggDEAEYCpIHAzQuOaAHk6oB&sclient=gws-wiz-serp">
+  <img class="card__image" src="https://www.liquor.com/thmb/05j0hV6YaJB9D2Vo_7xbFHgF-Q8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/Gimlet-1500x1500-hero-7af9450103b9437d8d5b7206a6ddfe43.jpg"
+  alt="">
+  <h2>마티니 잔 / Martini Glass</h2> 
+  <h4>흔히 마티니 하면 떠올리는 이미지인 역삼각형 형태의 잔이다. 칵테일을 상징하는 잔 중 하나로 받아들여진다</h4>
+
+  </a>
+</button>
+
+    <h1>리큐르 종류에 대해</h1>
+    <button class="card__item card1">
+
+        <a href="https://namu.wiki/w/%EA%B9%94%EB%A3%A8%EC%95%84">
+        <img class="card__image" src="https://upload.wikimedia.org/wikipedia/commons/3/37/Kahl%C3%BAa_700ml_imported_glass_bottle.jpg"
+        alt="">
+        <h2>칼루아 / KAHLÚA</h2> 
+        <h4>  1936년 멕시코에서 태어난  KAHLÚA는 풍부하고 다채로운 유산과 함께 깊은 역사를 자랑합니다. Veracruz Nahuatl 언어로 ' Acolhua 사람들의 집' 을 의미하는 Kahlúa라는 이름이 붙었습니다. 
+          Jules Berman은 미국에 리큐어를 수입한 최초의 사람으로 "Mr. Kahlua"라는 별명을 얻었습니다
+          <br><br>
+          100% 아라비카 커피 원두와 럼으로 만든 Kahlúa 커피 리큐어는 세계에서 가장 인기 있는 칵테일의 주요 성분 중 하나입니다.
+          블랙 러시안, 화이트러시안, 에스프레소 마티니에 재료로 사용됩니다.</h4>
+        </a>
+    </button>
+  </button>
+
+  <button class="card__item card1">
+
+      <a href="https://namu.wiki/w/%EA%B0%88%EB%A6%AC%EC%95%84%EB%85%B8">
+      <img class="card__image" src="https://i.namu.wiki/i/9l3buFdJZ5Nldm2MWvjBBrAo-3CE9OSY44SG0fUpip1nWOQp-TvZpj0E2vQD2jPwQs_jgtqsBJTfbw7IaW73JQnytI7xqpssZoDhx9-jzwOQxClP-RcAl1jR1ZpE9gUCwWuLgsIanSR6xi1TJoMhNA.webp"
+      alt="">
+      <h2>갈리아노 / Galliano</h2> 
+      <h4>갈리아노는 이탈리아에서 생산되는 달콤한 허브 리큐어 브랜드이다. 1896년 토스카나 증류소이자 브랜디 생산자인 아르투로 바카리(Arturo Vaccari)에 의해 만들어졌으며, 제1차 이탈리아-에티오피아 전쟁 당시 이탈리아 왕립군 이탈리아 장교인 주세페 갈리아노(Giuseppe Galliano)의 이름을 따서 명명되었습니다.
+        <br><br>
+        갈리아노는 달콤한 바닐라 아니스 향과 은은한 감귤류, 나무 향이 나는 허브 향이 특징입니다. 바닐라 탑 노트는 갈리아노를 아니제트, 우조 (술), 삼부카, 파스티스와 같은 다른 아니스 맛 리큐어와 차별됩니다.
+        갈리아노는 다이제스티프(소화제)와 칵테일, 특히 하비 월뱅어, 옐로 버드, 골든 캐딜락 및 골든 드림의 재료로 사용됩니다.</h4>
+      </a>
+  </button>
+
+  <button class="card__item card1">
+
+    <a href="https://namu.wiki/w/%EB%B8%94%EB%A3%A8%20%ED%81%90%EB%9D%BC%EC%86%8C">
+    <img class="card__image" src="https://upload.wikimedia.org/wikipedia/commons/e/e3/Blue_Cura%C3%A7ao_Bottle.jpg"
+    alt="">
+    <h2>블루큐라소 / Blue Curacao</h2> 
+    <h4>큐라소는 다양한 형태로 판매될 수 있지만 가장 일반적인 것은 오렌지색 건조 큐라소 와 밝은 파란색으로 염색된 블루 큐라소 입니다.
+      <br><br>블루 큐라소는 씁쓸한 오렌지 맛이 나며 블루큐라소는 푸른색 칵테일을 만들때 트리플섹을 대신해서 넣을때 사용됩니다.
+    </h4>
+    </a>
+</button>
+
+<button class="card__item card1">
+
+  <a href="https://namu.wiki/w/%EB%B2%A0%EB%84%A4%EB%94%95%ED%8B%B4">
+  <img class="card__image" src="https://i.namu.wiki/i/AtAH12gMXl1but9krN9ye_acMC47sVUOH9Ksna-mH7mEtZmX6h3Jk3MmvdrHRwXQzcDukWUekK--H8mPX-3GaSsNukPLdF4oO2nXXU7PrMSKEvV_pW_hfIbNqHrTjRT1eKe8nVH5aUTgnyg3kBwTYg.webp"
+  alt="">
+  <h2>베네딕틴 / benedictine</h2> 
+  <h4>브랜디를 베이스로 만드는 프랑스의 리큐르
+    개발자인 알렉산드르 르그랑(Alexandre Le Grand)에 따르면 베네딕틴의 기원은 1510년에 '돔 베르나르도 빈첼리'라는 수도자가 고안한 엘릭서로, 노르망디 페캉(Fécamp)의 베네딕도회 수도원에서 의료 목적으로 만들던 술입니다.
+    샤르트뢰즈, 드람뷔와 함께 고급 허브 리큐르로 손꼽히는 술로, 리큐르의 왕이라고 불립니다. <br><br>
+    27가지의 재료를 사용해 만들어 낸 독특한 향미와 특유의 고급스러운 단 맛을 자랑합니다.</h4>
+
+  </a>
+</button>
+
+<button class="card__item card1">
+
+  <a href="https://namu.wiki/w/%EB%B2%A0%EB%A5%B4%EB%AC%B4%ED%8A%B8">
+  <img class="card__image" src="https://i.namu.wiki/i/dBf7APS4ycdMi0rBu0nVxjFcg6OyFF6skM1Fv_GGid91u_VgZFkSQMnFZN9-iKqKN2HQB0aYu8-Z6QZ1eIm3HuMnsY_--S61AVRoOoysHbgdPKBr0w2waVanQheH_RWxlSQjrjc1-JKW9E6nvO8uUw.webp"
+  alt="">
+  <h2>베르뭇 / Vermouth</h2> 
+  <h4>원료인 백포도주 또는 적포도주에 주정과 설탕과 향쑥·용담·키니네·창포뿌리 등의 향료나 약초를 넣어 향미를 낸 향미 강화 포도주입니다. <br><br>
+  프렌치 / 드라이 베르뭇은 백포도주로 만들어졌으며 이탈리안 / 스위트 베르뭇은 적포도주로 만들어졌습니다. </h4>
+  </a>
+</button>
+
+
+</div>
+</body>
+</html>
